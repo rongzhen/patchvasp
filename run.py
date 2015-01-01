@@ -18,8 +18,8 @@ fileRUNSCRIPT="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT"
 #D=['S', 'Se'];
 
 A=['Cu'];
-B=['Sc','Cu','Ti'];
-C=['Ti','Si'];
+B=['Sc'];
+C=['Si'];
 D=['S'];
 
 phaseN=['FM','AFM1','AFM2','AFM3']
@@ -95,22 +95,22 @@ def genINCAR(eleA, eleB, eleC, eleD, phase):
             strLdauL= "LDAUL      =   2     2      0"
             strLdauU= "LDAUU      =   4.0   4.4    0.0" 
             if phase == 'FM':
-                strMagmom="6*0.0 4.0 4.0 8*0.0"
+                strMagmom="MAGMOM     = 6*0.0 4.0 4.0 8*0.0"
             else:
-                strMagmom="6*0.0 4.0 -4.0 8*0.0"
+                strMagmom="MAGMOM     = 6*0.0 4.0 -4.0 8*0.0"
         else:
             strLdauL= "LDAUL      =   2     0      0"
             strLdauU= "LDAUU      =   4.0   0.0    0.0"
-            strMagmom="6*0.0 2*0.0 8*0.0"
+            strMagmom="MAGMOM     = 6*0.0 2*0.0 8*0.0"
 	# if B==C==Ti
     elif eleB == eleC:
         strLdauJ= "LDAUJ      =   0.0   0.0    0.0"
         strLdauL= "LDAUL      =   2     2      0"
         strLdauU= "LDAUU      =   4.0   4.4    0.0"
         if phase == 'FM':
-            strMagmom="4*0.0 4*4.0 8*0.0"
+            strMagmom="MAGMOM     = 4*0.0 4*4.0 8*0.0"
         else:
-            strMagmom="4*0.0 4.0 -4.0 4.0 -4.0 8*0.0"
+            strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 4.0 -4.0 8*0.0"
 	# normal case 
     else:
         strLdauJ= "LDAUJ      =   0.0   0.0    0.0   0.0"
@@ -119,27 +119,29 @@ def genINCAR(eleA, eleB, eleC, eleD, phase):
             strLdauL= "LDAUL      =   2     2      2     0"
             strLdauU= "LDAUU      =   4.0   "+str(dictU[eleB])+"    "+str(dictU[eleC])+"   0.0"
             if phase == 'FM':
-                strMagmom="4*0.0 4*4.0 8*0.0"
+                strMagmom="MAGMOM     = 4*0.0 4*4.0 8*0.0"
             else:
-                strMagmom="4*0.0 4.0 -4.0 4.0 -4.0 8*0.0"
+                strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 4.0 -4.0 8*0.0"
         else:
             strLdauL= "LDAUL      =   2     2      0     0"
             strLdauU= "LDAUU      =   4.0   "+str(dictU[eleB])+"    0.0   0.0"
             if phase == 'FM':
-                strMagmom="4*0.0 2*4.0 2*0.0 8*0.0"
+                strMagmom="MAGMOM     = 4*0.0 2*4.0 2*0.0 8*0.0"
             else:
-                strMagmom="4*0.0 4.0 -4.0 2*0.0 8*0.0"
+                strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 2*0.0 8*0.0"
 
     nList = len(incarN)
-    for i in range(0, nList-1):
+    for i in range(0, nList):
 
         incarF=fileINCAR+"/"+incarN[i]
+        
+        os.system("cp %s ." %incarF)
 
-        fin = open(incarF, "r")
+        fin = open(incarN[i], "r")
         strFin=fin.read() 
         fin.close()
 
-        os.system("rm %s" % incarF)
+        os.system("rm %s" % incarN[i])
 
         word_dic = {
         'MAGMOMline': strMagmom,
@@ -149,7 +151,7 @@ def genINCAR(eleA, eleB, eleC, eleD, phase):
 
         strFout=replace_words(strFin, word_dic)
 
-        fout = open(incarF, "w")
+        fout = open(incarN[i], "w")
         fout.write(strFout)
         fout.close()
 
