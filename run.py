@@ -18,8 +18,8 @@ fileRUNSCRIPT="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT"
 #D=['S', 'Se'];
 
 A=['Cu'];
-B=['Sc'];
-C=['Si'];
+B=['Ti','Cu','Ni'];
+C=['Si','Ti'];
 D=['S'];
 
 phaseN=['FM','AFM1','AFM2','AFM3']
@@ -90,27 +90,20 @@ def genINCAR(eleA, eleB, eleC, eleD, phase):
 	# if A==B==Cu
     if eleA == eleB:
         strLdauJ= "LDAUJ      =   0.0   0.0    0.0"
+        strMagmom="MAGMOM     = 6*0.0 2*0.0 8*0.0"
 
         if eleC == "Ti":
             strLdauL= "LDAUL      =   2     2      0"
             strLdauU= "LDAUU      =   4.0   4.4    0.0" 
-            if phase == 'FM':
-                strMagmom="MAGMOM     = 6*0.0 4.0 4.0 8*0.0"
-            else:
-                strMagmom="MAGMOM     = 6*0.0 4.0 -4.0 8*0.0"
         else:
             strLdauL= "LDAUL      =   2     0      0"
             strLdauU= "LDAUU      =   4.0   0.0    0.0"
-            strMagmom="MAGMOM     = 6*0.0 2*0.0 8*0.0"
 	# if B==C==Ti
     elif eleB == eleC:
         strLdauJ= "LDAUJ      =   0.0   0.0    0.0"
         strLdauL= "LDAUL      =   2     2      0"
         strLdauU= "LDAUU      =   4.0   4.4    0.0"
-        if phase == 'FM':
-            strMagmom="MAGMOM     = 4*0.0 4*4.0 8*0.0"
-        else:
-            strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 4.0 -4.0 8*0.0"
+        strMagmom="MAGMOM     = 4*0.0 4*0.0 8*0.0"
 	# normal case 
     else:
         strLdauJ= "LDAUJ      =   0.0   0.0    0.0   0.0"
@@ -118,17 +111,14 @@ def genINCAR(eleA, eleB, eleC, eleD, phase):
         if eleC == "Ti":
             strLdauL= "LDAUL      =   2     2      2     0"
             strLdauU= "LDAUU      =   4.0   "+str(dictU[eleB])+"    "+str(dictU[eleC])+"   0.0"
-            if phase == 'FM':
-                strMagmom="MAGMOM     = 4*0.0 4*4.0 8*0.0"
-            else:
-                strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 4.0 -4.0 8*0.0"
         else:
             strLdauL= "LDAUL      =   2     2      0     0"
             strLdauU= "LDAUU      =   4.0   "+str(dictU[eleB])+"    0.0   0.0"
-            if phase == 'FM':
-                strMagmom="MAGMOM     = 4*0.0 2*4.0 2*0.0 8*0.0"
-            else:
-                strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 2*0.0 8*0.0"
+
+        if phase == 'FM':
+            strMagmom="MAGMOM     = 4*0.0 2*4.0 2*0.0 8*0.0"
+        else:
+            strMagmom="MAGMOM     = 4*0.0 4.0 -4.0 2*0.0  8*0.0"
 
     nList = len(incarN)
     for i in range(0, nList):
