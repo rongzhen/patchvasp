@@ -9,7 +9,10 @@ fileINCAR='/home/rongzhen/workplace/python_coding/final/FIELS/INCAR'
 fileKPOINTS="/home/rongzhen/workplace/python_coding/final/FIELS/KPOINTS"
 filePOSCAR="/home/rongzhen/workplace/python_coding/final/FIELS/POSCAR"
 filePOTCAR="/home/rongzhen/workplace/python_coding/final/FIELS/POTCAR/PBE"
-fileRUNSCRIPT="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT"
+fileRUNSCRIPTFM="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT/runFM.sh"
+fileRUNSCRIPTAFM1="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT/runAFM1.sh"
+fileRUNSCRIPTAFM2="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT/runAFM2.sh"
+fileRUNSCRIPTAFM3="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT/runAFM3.sh"
 
 
 #A=['Cu'];
@@ -18,13 +21,14 @@ fileRUNSCRIPT="/home/rongzhen/workplace/python_coding/final/FIELS/RUNSCRIPT"
 #D=['S', 'Se'];
 
 A=['Cu'];
-B=['Ti','Cu','Ni'];
-C=['Si','Ti'];
+B=['Fe'];
+C=['Sn'];
 D=['S'];
+
 
 phaseN=['FM','AFM1','AFM2','AFM3']
 structureN=['KS', 'ST']
-incarN=['INCAR.pbe.relax1','INCAR.pbe.relax2','INCAR.pbe.relax3','INCAR.pbe.relax4','INCAR.pbe.relax5']
+incarN=['INCAR.pbe.relax1','INCAR.pbe.relax2','INCAR.pbe.relax3','INCAR.pbe.relax4','INCAR.pbe.relax5', 'INCAR.pbe.relax6']
  
 #################### Function: replace many words###################
 def replace_words(text, word_dic):
@@ -194,8 +198,17 @@ def genPOTCAR(eleA, eleB, eleC, eleD):
 
 
 #################### Function: generate all the runscript.sh###################
-def genRUN():
-    filerun=fileRUNSCRIPT+"/*"
+def genRUN(phase):
+
+    if phase == "FM":
+        filerun=fileRUNSCRIPTFM
+    elif phase == "AFM1":
+        filerun=fileRUNSCRIPTAFM1
+    elif phase == "AFM2":
+        filerun=fileRUNSCRIPTAFM2
+    else:
+        filerun=fileRUNSCRIPTAFM3
+
     os.system("cp %s ." % filerun)
 
 
@@ -236,7 +249,7 @@ for eleA in A:
                 prevDir = os.getcwd()
 
                 dirName, labelName=genDir(eleA, eleB, eleC, eleD)
-                print "compound name: ", dirName                
+
                 os.chdir(prevDir)
                 os.chdir(dirName)
 
@@ -247,7 +260,7 @@ for eleA in A:
                         os.chdir(phase)
 
                         genKPOINTS()
-                        genRUN()
+                        genRUN(phase)
                         genPOTCAR(eleA, eleB, eleC, eleD)
                         genPOSCAR(eleA, eleB, eleC, eleD, structure, phase)
                         genINCAR(eleA, eleB, eleC, eleD, phase)
